@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:16
+    restart: always
+    container_name: archivos_postgres
+    ports:
+      - "5434:5432" # EXTERNO:INTERNO
+    environment:
+      POSTGRES_USER: archivos_user
+      POSTGRES_PASSWORD: archivos_password
+      POSTGRES_DB: academy-file
+    volumes:
+      - archivos_pgdata:/var/lib/postgresql/data
+    networks:
+      - archivos-net
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    container_name: archivos_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@archivos.com
+      PGADMIN_DEFAULT_PASSWORD: archivosadmin
+    ports:
+      - "5051:80"
+    depends_on:
+      - db
+    networks:
+      - archivos-net
+
+volumes:
+  archivos_pgdata:
+
+
+networks:
+  archivos-net:
+    driver: bridge
